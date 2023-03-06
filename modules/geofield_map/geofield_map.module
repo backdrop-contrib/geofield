@@ -466,7 +466,7 @@ function geofield_map_settings_do($settings) {
  *   URL for contacting the google maps JavaScript API, complete with key.
  */
 function geofield_map_build_url() {
-  $query = array('sensor' => 'false');
+  $query = array();
 
   if (module_exists('geocoder')) {
     $config = config('geocoder.settings');
@@ -475,6 +475,7 @@ function geofield_map_build_url() {
     if ($auth_method == 2 && !empty($api_key)) {
       $query['key'] = $api_key;
     }
+    $query['callback'] = 'initMap';
   }
 
   $url = url('https://maps.googleapis.com/maps/api/js', array('query' => $query));
