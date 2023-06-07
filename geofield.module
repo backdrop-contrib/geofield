@@ -690,38 +690,38 @@ function geofield_data_property_info($name = NULL) {
       'label' => 'Latitude',
       'type' => 'decimal',
       'required' => TRUE,
-      'setter callback' => 'entity_property_verbatim_set',
+      'setter callback' => 'entity_plus_property_verbatim_set',
       'microdata' => TRUE,
     ),
     'lon' => array(
       'label' => 'Longitude',
       'type' => 'decimal',
       'required' => TRUE,
-      'setter callback' => 'entity_property_verbatim_set',
+      'setter callback' => 'entity_plus_property_verbatim_set',
       'microdata' => TRUE,
     ),
     'left' => array(
       'label' => 'Left Latitude',
       'type' => 'decimal',
-      'setter callback' => 'entity_property_verbatim_set',
+      'setter callback' => 'entity_plus_property_verbatim_set',
       'microdata' => FALSE,
     ),
     'top' => array(
       'label' =>  'Top Longitude',
       'type' => 'decimal',
-      'setter callback' => 'entity_property_verbatim_set',
+      'setter callback' => 'entity_plus_property_verbatim_set',
       'microdata' => FALSE,
     ),
     'right' => array(
       'label' => 'Right Latitude',
       'type' => 'decimal',
-      'setter callback' => 'entity_property_verbatim_set',
+      'setter callback' => 'entity_plus_property_verbatim_set',
       'microdata' => FALSE,
     ),
     'bottom' => array(
       'label' => 'Bottom Longitude',
       'type' => 'decimal',
-      'setter callback' => 'entity_property_verbatim_set',
+      'setter callback' => 'entity_plus_property_verbatim_set',
       'microdata' => FALSE,
     ),
     'srid' => array(
@@ -747,7 +747,7 @@ function geofield_data_property_info($name = NULL) {
   foreach ($properties as $key => &$value) {
     $value += array(
       'description' => !empty($name) ? t('!label of field %name', array('!label' => $value['label'], '%name' => $name)) : '',
-      'getter callback' => 'entity_property_verbatim_get',
+      'getter callback' => 'entity_plus_property_verbatim_get',
     );
   }
 
