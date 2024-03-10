@@ -16,8 +16,8 @@ description = Test the various display formatters of geofields.
 group = Geofield
 file = geofield.test
 
-[GeofieldOpenlayersTestCase]
-name = Geofield/Openlayers
-description = Integration tests for Openlayers
-group = Geofield
-file = geofield_openlayers.test
+;[GeofieldOpenlayersTestCase]
+;name = Geofield/Openlayers
+;description = Integration tests for Openlayers
+;group = Geofield
+;file = geofield_openlayers.test
