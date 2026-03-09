@@ -33,10 +33,26 @@ class geofieldProximityManual extends geofieldProximityBase implements geofieldP
     $form['value']['#origin_element'] = 'geofield_latlon';
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getSourceValue($views_plugin) {
-    return array(
-      'latitude' => (isset($views_plugin->value)) ? $views_plugin->value['origin']['lat'] : $views_plugin->options['geofield_proximity_manual']['lat'],
-      'longitude' => (isset($views_plugin->value)) ? $views_plugin->value['origin']['lon'] : $views_plugin->options['geofield_proximity_manual']['lon'],
-    );
+    if (empty($views_plugin->value) || empty($views_plugin->value['origin'])) {
+      return;
+    }
+    // Provided value or default value set by admin, both can be empty.
+    // If the field were required, we wouldn't even get here.
+    $lat = ($views_plugin->value['origin']['lat']) ?? $views_plugin->options['geofield_proximity_manual']['lat'];
+    $lon = ($views_plugin->value['origin']['lon']) ?? $views_plugin->options['geofield_proximity_manual']['lon'];
+    $lat = trim($lat);
+    $lon = trim($lon);
+    // We can not use empty(), as "0" is valid, too.
+    if (strlen($lat) && strlen($lon)) {
+      return array(
+        'latitude' => $lat,
+        'longitude' => $lon,
+      );
+    }
+    return;
   }
 }
