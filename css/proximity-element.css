@@ -39,3 +39,10 @@
 .geofield-proximity-field-wrapper .form-type-geofield-proximity-search {
   float: none;
 }
+.views-exposed-widget:has(div > .geofield-proximity-field-wrapper),
+.form-type-geofield-proximity,
+.form-item-field-geofield-distance-origin,
+.form-item-field-geofield-distance-origin-lat,
+.form-item-field-geofield-distance-origin-lon {
+  max-width: 100%;
+}
