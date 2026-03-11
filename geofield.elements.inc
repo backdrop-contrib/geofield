@@ -38,7 +38,6 @@ define('GEOFIELD_NAUTICAL_MILES', 3444);
 /**
  * Implements hook_element_info().
  */
-
 function geofield_element_info() {
   return array(
     'geofield_latlon' => array(
@@ -47,6 +46,7 @@ function geofield_element_info() {
       '#element_validate' => array('geofield_latlon_element_validate'),
       '#theme' => array('geofield_latlon'),
       '#theme_wrappers' => array('fieldset'),
+      '#value_callback' => 'geofield_latlon_element_value_callback',
     ),
     'geofield_bounds' => array(
       '#input' => TRUE,
@@ -65,9 +65,24 @@ function geofield_element_info() {
 }
 
 /**
+ * Custom value callback for 'geofield_latlon' elements.
+ */
+function geofield_latlon_element_value_callback($element, $input, &$form_state) {
+  // Silently discard invalid data type. This prevents TypeError when building
+  // the form. For example triggered by viwes exposed form GET data.
+  if (is_string($input)) {
+    unset($form_state['input']['field_geofield_distance']['origin']);
+    return array(
+      'lat' => '',
+      'lon' => '',
+    );
+  }
+  return $input;
+}
+
+/**
  * Process function for geofield_latlon.
  */
-
 function geofield_latlon_element_process($element, &$form_values) {
   $element['#tree'] = TRUE;
   $element['#input'] = TRUE;
