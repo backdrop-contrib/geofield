@@ -320,9 +320,28 @@ function geofield_proximity_element_process($element, &$form_state, $form) {
  * Validate the geofield proximity search form item
  */
 function geofield_proximity_search_validate($element, &$form_state) {
-  //If the origin is set, ensure the distance is set as well
-  if (!empty($element['origin']['#value']) && trim($element['origin']['#value']) != '' && empty($element['distance']['#value']))
-    form_set_error(implode('][', $element['#array_parents']) . '][distance', t('@title must be set when @origin is specified.', array('@title' => $element['distance']['#title'], '@origin' => $element['origin']['#title'])));
+  // If the origin is set, ensure the distance is set as well.
+  $origin_empty = TRUE;
+  // String based like geocoder.
+  if (isset($element['origin']['#value']) && is_string($element['origin']['#value'])) {
+    $element['origin']['#value'] = trim($element['origin']['#value']);
+    $origin_empty = ($element['origin']['#value'] == '');
+  }
+  // Array based like manual input.
+  elseif (is_array($element['origin']['#default_value'])) {
+    foreach ($element['origin']['#default_value'] as $key => $default) {
+      if (isset($element['origin'][$key]) && strlen($element['origin'][$key]['#value'])) {
+        $origin_empty = FALSE;
+        break;
+      }
+    }
+  }
+  if (!$origin_empty && empty($element['distance']['#value'])) {
+    form_set_error(implode('][', $element['#array_parents']) . '][distance', t('@title must be set when @origin is specified.', array(
+      '@title' => $element['distance']['#title'],
+      '@origin' => $element['origin']['#title'],
+    )));
+  }
 }
 
 function geofield_theme($existing, $type, $theme, $path) {
