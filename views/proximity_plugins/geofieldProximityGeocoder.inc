@@ -49,10 +49,14 @@ class geofieldProximityGeocoder extends geofieldProximityBase implements geofiel
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getSourceValue($views_plugin) {
     $geocoder_engine = $views_plugin->options['geofield_proximity_geocoder_engine'];
     $location = (isset($views_plugin->value)) ? $views_plugin->value['origin'] : $views_plugin->options['geofield_proximity_geocoder'];
-    if ($location) {
+    // Make sure it's a string to prevent problem with faulty data from GET.
+    if ($location && is_string($location)) {
       $geocoded_data_raw = geocoder($geocoder_engine, $location);
 
       if ($geocoded_data_raw) {
