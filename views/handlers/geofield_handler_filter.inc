@@ -235,6 +235,56 @@ class geofield_handler_filter extends views_handler_filter_numeric {
     $this->value['origin'] = $input[$input_id]['origin'];
     return TRUE;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function build_group_validate($form, &$form_state) {
+    if (empty($form_state['values']['options']['group_info'])) {
+      return;
+    }
+    $group_info = $form_state['values']['options']['group_info'];
+    if (empty($group_info['identifier'])) {
+      form_error($form['group_info']['identifier'], t('The identifier is required if the filter is exposed.'));
+    }
+    if (!empty($group_info['identifier']) && $group_info['identifier'] == 'value') {
+      form_error($form['group_info']['identifier'], t('This identifier is not allowed.'));
+    }
+    if (!$this->view->display_handler->is_identifier_unique($form_state['id'], $group_info['identifier'])) {
+      form_error($form['group_info']['identifier'], t('This identifier is used by another handler.'));
+    }
+
+    // Overridden to handle the more complex input form.
+    if (!empty($group_info['group_items'])) {
+      foreach ($group_info['group_items'] as $id => $group) {
+        if (empty($group['remove'])) {
+          $is_value_empty = FALSE;
+          // Contains distance, unit, origin. The latter is string or array.
+          // Note that the handler's own validation will take care of the rest.
+          $values = $group['value'];
+          if (is_string($values['origin']) && trim($values['origin']) == '') {
+            $is_value_empty = TRUE;
+          }
+          elseif (is_array($values['origin'])) {
+            $lat = trim($values['origin']['lat']);
+            $lon = trim($values['origin']['lon']);
+            $is_value_empty = (!strlen($lat) && !strlen($lon));
+          }
+
+          // Check if the title is defined but value wasn't defined.
+          if (!empty($group['title']) && $is_value_empty) {
+            form_error($form['group_info']['group_items'][$id]['value'], t('The value is required if title for this item is defined.'));
+          }
+
+          // Check if the value is defined but title wasn't defined.
+          if (!$is_value_empty && empty($group['title'])) {
+            form_error($form['group_info']['group_items'][$id]['title'], t('The title is required if value for this item is defined.'));
+          }
+        }
+      }
+    }
+  }
+
 }
 
 function geofield_views_ui_change_proximity_widget($form, &$form_state) {
