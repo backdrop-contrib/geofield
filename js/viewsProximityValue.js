@@ -1,6 +1,6 @@
 /**
  * @file
- * Dynamically update Views admin UI form parts by sending POST.
+ * Dynamically update Views admin UI form items fetched via POST request.
  */
 (function ($) {
 
