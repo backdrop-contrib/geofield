@@ -326,6 +326,76 @@ function geofield_views_api() {
 }
 
 /**
+ * Implements hook_menu().
+ */
+function geofield_menu() {
+  $items = array();
+  $items['admin/structure/geofield_filter_ajax/%views_ui_cache/%'] = array(
+    'access callback' => 'user_access',
+    'access arguments' => array('administer views'),
+    // We need function views_ui_config_item_form() from views_ui.
+    'file' => 'views_ui.admin.inc',
+    'file path' => 'core/modules/views_ui',
+    'page callback' => '_geofield_views_ui_change_proximity_widget_js',
+    'page arguments' => array(3, 4),
+    'delivery callback' => 'ajax_deliver',
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+/**
+ * Ajax callback that returns a form part to replace.
+ *
+ * @param view $view
+ *   The views object.
+ * @param string $display_id
+ *   Name of the current display, for example 'page'.
+ */
+function _geofield_views_ui_change_proximity_widget_js(view $view, $display_id) {
+  if (isset($_POST['plugin'])) {
+    $plugin_name = $_POST['plugin'];
+  }
+  else {
+    backdrop_not_found();
+    backdrop_exit();
+  }
+
+  $form_state = form_state_defaults();
+  // Form builder expects those at least:
+  $form_state['view'] = $view;
+  $form_state['display_id'] = $display_id;
+  $form_state['type'] = 'filter';
+  $form_state['id'] = 'field_geofield_distance';
+
+  // Initially (before submitting), this $item is only stub.
+  $item = $view->get_item($display_id, 'filter', 'field_geofield_distance');
+  $item['source'] = $plugin_name;
+
+  if (isset($_POST['operator'])) {
+    $item['operator'] = $_POST['operator'];
+  }
+  // Hardcode for now.
+  if ($plugin_name = 'manual') {
+    $item['value']['origin'] = array('lat' => '', 'lon' => '');
+  }
+  else {
+    $item['value']['origin'] = '';
+  }
+  $form_state['view']->set_item($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
+
+  $form = backdrop_build_form('views_ui_config_item_form', $form_state);
+  if (isset($form['options']['value'])) {
+    // Put it into cache so we don't lose default value settings.
+    views_ui_cache_set($form_state['view']);
+    // @see js/viewsProximityValue.js
+    return $form['options']['value'];
+  }
+
+  return '';
+}
+
+/**
  * Geofield Compute Values
  *
  * @todo: documentation

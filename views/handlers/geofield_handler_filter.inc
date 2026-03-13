@@ -130,11 +130,16 @@ class geofield_handler_filter extends views_handler_filter_numeric {
       '#default_value' => $this->options['source'],
     );
 
+    global $base_path;
+    $form['source']['#attributes']['data-path'] = $base_path . 'admin/structure/geofield_filter_ajax/' . $this->view->name . '/' . $this->view->current_display;
+
+    // This only works with Javascript disabled.
     $form['source_change'] = array(
       '#type' => 'submit',
       '#value' => 'Change Source Widget',
       '#submit' => array('geofield_views_ui_change_proximity_widget'),
     );
+    $form['source_change']['#attributes']['class'][] = 'js-hide';
 
     $proximityHandlers = module_invoke_all('proximity_views_handlers');
     foreach ($proximityHandlers as $key => $handler) {
