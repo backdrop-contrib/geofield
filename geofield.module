@@ -345,7 +345,7 @@ function geofield_menu() {
 }
 
 /**
- * Ajax callback that returns a form part to replace.
+ * Callback for AJAX to return a form part for replacement.
  *
  * @param view $view
  *   The views object.
