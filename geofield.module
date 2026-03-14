@@ -330,7 +330,7 @@ function geofield_views_api() {
  */
 function geofield_menu() {
   $items = array();
-  $items['admin/structure/geofield_filter_ajax/%views_ui_cache/%'] = array(
+  $items['admin/structure/geofield_filter_ajax/%geofield_views_ui_cache/%'] = array(
     'access callback' => 'user_access',
     'access arguments' => array('administer views'),
     // We need function views_ui_config_item_form() from views_ui.
@@ -342,6 +342,19 @@ function geofield_menu() {
     'type' => MENU_CALLBACK,
   );
   return $items;
+}
+
+/**
+ * Wrapper for views_ui loader callback.
+ *
+ * To avoid dependency on views_ui, which might not be enabled.
+ */
+function geofield_views_ui_cache_load($name) {
+  if (module_exists('views_ui')) {
+    return views_ui_cache_load($name);
+  }
+  // Page not found.
+  return FALSE;
 }
 
 /**
