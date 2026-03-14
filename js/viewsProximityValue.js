@@ -17,6 +17,18 @@
         $('.geofield-proximity-field-wrapper').replaceWith(formItems);
       }
     },
+    updateMultipleFormItems: function (data) {
+      let fullHTML = data[1].data;
+      let nodes = $.parseHTML(fullHTML);
+      let index = 1;
+      for (const node of nodes) {
+        if ($(node).hasClass('geofield-proximity-field-wrapper')) {
+          $('tr#views-row-' + index + ' .geofield-proximity-field-wrapper').replaceWith(node);
+          index++;// wow that works, it seems... @todo operator select lists.
+          // a bit fragile and based on optimism...
+        }
+      }
+    },
     /**
      * @return bool
      */
@@ -31,11 +43,11 @@
      *
      */
     attach: function (context, settings) {
-      if ($('#edit-options-group-button-radios :checked').val() === 1) {
-        // This behavior does not work with grouped exposed filters.
-        return;
-      }
       const widget = this;
+      let isGrouped = false;
+      if ($('#edit-options-group-button-radios :checked').val() === '1') {
+        isGrouped = true;
+      }
       let hasRange = widget.formHasRange();
       $.ajaxSetup({
         type: 'POST',
@@ -49,7 +61,12 @@
         };
         $.ajax( { data: postData } )
           .done( function (data) {
-            widget.updateFormItem(data);
+            if (isGrouped === false) {
+              widget.updateFormItem(data);
+            }
+            else {
+              widget.updateMultipleFormItems(data);
+            }
         });
       });
 

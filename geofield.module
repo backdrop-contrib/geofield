@@ -391,6 +391,10 @@ function _geofield_views_ui_change_proximity_widget_js(view $view, $display_id) 
     // @see js/viewsProximityValue.js
     return $form['options']['value'];
   }
+  elseif (isset($form['options']['group_info'])) {
+    views_ui_cache_set($form_state['view']);
+    return $form['options']['group_info']['group_items'];
+  }
 
   return '';
 }
