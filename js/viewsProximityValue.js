@@ -24,8 +24,7 @@
       for (const node of nodes) {
         if ($(node).hasClass('geofield-proximity-field-wrapper')) {
           $('tr#views-row-' + index + ' .geofield-proximity-field-wrapper').replaceWith(node);
-          index++;// wow that works, it seems... @todo operator select lists.
-          // a bit fragile and based on optimism...
+          index++;
         }
       }
     },
