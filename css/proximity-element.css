@@ -43,6 +43,8 @@
 .form-type-geofield-proximity,
 .form-item-field-geofield-distance-origin,
 .form-item-field-geofield-distance-origin-lat,
-.form-item-field-geofield-distance-origin-lon {
+.form-item-field-geofield-distance-origin-lon,
+.geofield-proximity-origin .form-item,
+.form-item-options-value-origin {
   max-width: 100%;
 }
