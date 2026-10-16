@@ -478,6 +478,9 @@ function geofield_map_build_url() {
     $query['callback'] = 'initMap';
   }
 
+  // Allow the query parameters to be altered.
+  backdrop_alter('geofield_map_build_url_query', $query);
+
   $url = url('https://maps.googleapis.com/maps/api/js', array('query' => $query));
 
   return $url;
